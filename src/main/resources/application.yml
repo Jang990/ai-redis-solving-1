@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/app}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: update      # 학습용. 스키마는 엔티티 만들면서 자동 생성.
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true           # S1에서 "쿼리가 매번 나가는지" 눈으로 볼 때 쓴다.
+
+  # redis 설정은 필요해질 때 네가 추가한다. (지금은 컨테이너만 떠 있음)

@@ -1,0 +1,31 @@
+# docker-compose.yml — Redis 학습 최소 토폴로지 (고정, §7)
+# 평소 개발: docker compose up -d mysql redis  +  호스트 ./gradlew bootRun (localhost:8080)
+# 다중 인스턴스 고통 재현: docker compose up -d --build mysql redis nginx --scale app=N  (nginx → localhost:80)
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+    ports: ["3306:3306"]
+
+  redis:
+    image: redis:7        # vanilla 단일노드. persistence/eviction/cluster 무설정 — 답 미리 박지 않음.
+    ports: ["6379:6379"]
+
+  app:
+    build: .              # 학습자의 Spring Boot Gradle 프로젝트. scale knob 대상.
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/app
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: "6379"
+    expose: ["8080"]      # 포트 고정 매핑 안 함 — LB 뒤에서 N개로 뜨므로
+    depends_on: [mysql, redis]
+
+  nginx:
+    image: nginx:1.27
+    volumes: ["./nginx.conf:/etc/nginx/conf.d/default.conf:ro"]
+    ports: ["80:80"]
+    depends_on: [app]
