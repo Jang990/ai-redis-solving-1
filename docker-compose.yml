@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app
-    ports: ["3306:3306"]
+    ports: ["3307:3306"]   # 호스트 3306은 로컬 MySQL이 이미 사용 중 → 밖으로는 3307로 노출 (컨테이너 내부는 3306 유지)
 
   redis:
     image: redis:7        # vanilla 단일노드. persistence/eviction/cluster 무설정 — 답 미리 박지 않음.
