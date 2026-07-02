@@ -14,7 +14,7 @@ public class OrdersService {
 
     @Transactional
     public long order(long productId, long userId) {
-        Products products = productsRepository.findWithLock(productId)
+        Products products = productsRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ProductId=" + productId));
         products.decreaseStock();
 
