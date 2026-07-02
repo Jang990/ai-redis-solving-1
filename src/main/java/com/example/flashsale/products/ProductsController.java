@@ -15,7 +15,9 @@ public class ProductsController {
     private final ProductsRepository productsRepository;
 
     @PostMapping
-    public ResponseEntity<ProductCreationResponse> create(ProductCreationRequest request) {
+    public ResponseEntity<ProductCreationResponse> create(
+            @RequestBody ProductCreationRequest request
+    ) {
         Products result = productsRepository.save(new Products(request.name(), request.price(), request.stock()));
 
         return ResponseEntity.status(HttpStatus.CREATED)
