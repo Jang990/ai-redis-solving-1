@@ -1,5 +1,6 @@
 package com.example.flashsale.products;
 
+import com.example.flashsale.products.exception.OutOfStockException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,5 +24,11 @@ public class Products {
         this.name = name;
         this.price = price;
         this.stock = stock;
+    }
+
+    public void decreaseStock() {
+        if(stock == 0)
+            throw new OutOfStockException();
+        this.stock--;
     }
 }
