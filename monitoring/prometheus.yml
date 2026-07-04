@@ -1,0 +1,19 @@
+# Prometheus 스크레이프 설정 (코치 제공 — 측정 도구, §4 낚싯대)
+global:
+  scrape_interval: 5s          # 30초 부하 테스트에서도 추이가 보이도록 짧게
+
+scrape_configs:
+  # 평소 개발: 호스트에서 ./gradlew bootRun 으로 뜬 앱
+  - job_name: spring-host
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["host.docker.internal:8080"]
+
+  # 다중 인스턴스 스테이지(--scale app=N)용: 컨테이너 앱 자동 발견.
+  # app 컨테이너가 안 떠 있으면 그냥 타깃 0개 — 무해.
+  - job_name: spring-docker
+    metrics_path: /actuator/prometheus
+    dns_sd_configs:
+      - names: ["app"]
+        type: A
+        port: 8080
